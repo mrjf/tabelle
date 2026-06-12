@@ -133,11 +133,21 @@ Constants are lifted: when every visible row shares a value, its column header c
 
 ## 08 — Demo
 
+[demo/index.html](demo/index.html) is one self-contained file — engine, theme, data, and query inlined. Open it straight from disk; no server, no build step, no network. Filtering and sorting work on `file://` (the URL just can't reflect state there).
+
 ```console
-$ npm run demo
+$ open demo/index.html
 ```
 
-Serves [demo/](demo/) — the Swiss graphic design canon as a tabelle: group by designer, filter by kind, sort by year.
+| Part | Role |
+| --- | --- |
+| `demo/data.json` | the dataset — the Swiss graphic design canon |
+| `demo/query.js` | the query function, sapi-conformant |
+| `demo/schema.json` | JSON Schema + `x-sapi` parameter docs |
+| `demo/page.js` | column spec and page chrome |
+| `demo/index.html` | the build product — do not edit by hand |
+
+Edit the parts, then rebuild with `npm run build:demo` (or `npm run demo` to build and serve). Served over http, the demo directory is also a complete [sapi](https://github.com/mrjf/sapi) site: agents can query `data.json` with `query.js` instead of reading the page.
 
 ---
 

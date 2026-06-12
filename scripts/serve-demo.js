@@ -1,5 +1,6 @@
-// Serve the demo (and the library it imports) over HTTP: npm run demo
-// Browsers block module imports on file:// pages, so the demo needs a server.
+// Serve the repo over HTTP with the demo at /demo/: npm run demo
+// The built demo also works straight from file:// — this server exists so
+// the demo can act as a live sapi site (data.json / query.js / schema.json).
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, dirname, extname, normalize } from "node:path";
@@ -9,6 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TYPES = {
   ".css": "text/css",
   ".js": "text/javascript",
+  ".json": "application/json",
   ".html": "text/html; charset=utf-8",
 };
 

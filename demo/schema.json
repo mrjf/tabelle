@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "tabelle demo — the swiss graphic design canon",
+  "type": "object",
+  "required": ["works"],
+  "properties": {
+    "works": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["designer", "work", "year", "kind", "url"],
+        "properties": {
+          "designer": { "type": "string" },
+          "work": { "type": "string" },
+          "year": { "type": "integer" },
+          "kind": { "type": "string", "enum": ["poster", "book", "typeface", "object"] },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  },
+  "x-sapi": {
+    "params": {
+      "designer": "filter by designer (exact match)",
+      "year": "filter by year (exact match)",
+      "kind": "filter by kind (exact match: poster | book | typeface | object)",
+      "sort": "sort key: designer | year | kind; prefix - for descending"
+    }
+  }
+}

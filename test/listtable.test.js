@@ -4,7 +4,7 @@ import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { JSDOM } from "jsdom";
 import query from "../demo/query.js";
-import data from "../demo/data.js";
+import data from "../demo/data.json" with { type: "json" };
 
 let initListTable;
 let dom;
