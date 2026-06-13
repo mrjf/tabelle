@@ -6,10 +6,14 @@
   "main": "listtable.js",
   "exports": {
     ".": "./listtable.js",
+    "./calendar.js": "./calendar.js",
+    "./map.js": "./map.js",
     "./themes/swiss.css": "./themes/swiss.css"
   },
   "files": [
     "listtable.js",
+    "calendar.js",
+    "map.js",
     "themes"
   ],
   "scripts": {
@@ -19,6 +23,14 @@
   },
   "devDependencies": {
     "jsdom": "^24.0.0"
+  },
+  "peerDependencies": {
+    "leaflet": ">=1.9"
+  },
+  "peerDependenciesMeta": {
+    "leaflet": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">=20"

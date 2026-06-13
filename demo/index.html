@@ -67,23 +67,37 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
   position: absolute; top: 0; line-height: 1.6rem;
   font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
 }
-.lt th .arrow { left: 0; opacity: 0.55; }
+/* sort arrow rides the right edge of the header, inside the column gutter */
+.lt th .arrow { right: 0.3rem; opacity: 0.55; }
+/* the default order: real, but not something anyone asked for */
+.lt th .arrow.implied { opacity: 0.3; }
 .lt th .clear { right: 1rem; opacity: 0; cursor: pointer; }
+/* the column's own name, revealed on hover — headers stay bare otherwise */
+.lt th .name {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  display: inline-block; line-height: 1.6rem;
+  opacity: 0;
+}
+.lt th:hover .name { opacity: 1; }
 .lt th.filtered:hover .clear { opacity: 0.45; }
 .lt th .clear:hover { opacity: 0.85; }
 .lt th .value {
   font-size: 0.8rem; font-weight: 500; line-height: 1.6rem; opacity: 0.85;
-  padding-left: 1.1rem; display: inline-block;
+  display: inline-block;
 }
 .lt th .value.implied { opacity: 0.68; font-weight: 400; }
 .lt th.has-value .arrow { display: none; }
-.lt th.has-value .value { padding-left: 0; }
 .lt th.has-value:not(.filtered) { cursor: default; }
 
 .lt td { font-size: 0.875rem; line-height: 1.5; }
 .lt tbody a[data-filter] { cursor: pointer; }
 /* underline = a click here filters */
 .lt tbody a[data-filter]:hover { text-decoration: underline; }
+/* filter preview: rows the hovered filter would remove recede; rowspan group
+   cells are dimmed by the engine only when their whole span would go */
+.lt td { transition: opacity 0.12s ease; }
+.lt tbody tr.lt-dim > td:not([rowspan]), .lt tbody td.lt-dim { opacity: 0.4; }
 /* ditto mark: a hairline showing how far a pinned value's range extends */
 /* overflow:clip (NOT hidden — hidden would break sticky) hard-clips label
    painting to the cell, so no engine's compositing can bleed it over the
@@ -125,6 +139,45 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 .lt td.lt-nowrap { white-space: nowrap; }
 .lt td.lt-mono a { white-space: nowrap; }
 
+/* ---- calendar (calendar.js): one bare-bones week grid, busy weeks only ---- */
+.lt-cal { margin-top: 3.5rem; margin-bottom: 2.5rem; }
+.lt-cal table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.lt-cal th {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 400; text-align: left;
+  padding: 0 0.5rem 0.3rem 0; border-bottom: 1px solid var(--fg);
+}
+.lt-cal td {
+  vertical-align: top; height: 5rem; padding: 0.3rem 0.5rem 0.3rem 0;
+  border-bottom: 1px solid var(--line); font-size: 0.7rem; line-height: 1.35;
+  overflow: hidden;
+}
+.lt-cal-day {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--muted);
+  display: block; margin-bottom: 0.15rem;
+}
+.lt-cal td.lt-cal-busy .lt-cal-day { color: var(--fg); }
+.lt-cal-event { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: opacity 0.12s ease; }
+/* spotlight: hovering an entry here or a row in the table fades the rest */
+.lt-cal-event.lt-dim { opacity: 0.3; }
+
+/* ---- map (map.js): real outlines on no-label tiles, Leaflet underneath ---- */
+.lt-map { margin-top: 3.5rem; margin-bottom: 2.5rem; height: 24rem; }
+.lt-map .leaflet-container { height: 100%; background: var(--bg); }
+/* labels come only from the rows; quiet mono, no tooltip bubble */
+.lt-map .lt-map-label {
+  background: none; border: 0; box-shadow: none; padding: 0;
+  color: var(--fg); opacity: 0.7;
+  font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 0.04em;
+}
+.lt-map .lt-map-label::before { display: none; }
+.lt-map .leaflet-control-attribution {
+  background: none; color: var(--muted);
+  font-family: "IBM Plex Mono", monospace; font-size: 0.6rem;
+}
+.lt-map .leaflet-control-attribution a { color: var(--muted); }
+
 /* ---- title-bar chrome (about / subscribe) ---- */
 .lt-chrome {
   position: absolute; right: 0; bottom: 1.1rem;
@@ -141,6 +194,10 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
   background: var(--bg); border: 1px solid var(--line); padding: 0.55rem 0.8rem;
 }
 .lt-subscribe-row { display: flex; gap: 0.8rem; align-items: center; }
+.lt-download summary { font-size: 0.9rem; }
+.lt-download-row { display: flex; gap: 0.8rem; align-items: center; }
+.lt-download-row a { color: var(--muted); }
+.lt-download-row a:hover { color: var(--fg); }
 .lt-subscribe-row select {
   font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
   background: var(--bg); color: var(--fg); border: 1px solid var(--line);
@@ -156,6 +213,34 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 .lt-about-panel p { margin: 0 0 0.7rem; }
 .lt-about-panel p:last-child { margin-bottom: 0; }
 .lt-about-panel a { text-decoration: underline; }
+
+/* ---- narrow viewports ---- */
+/* The desktop column proportions (the colgroup) and the no-wrap header collide
+   at phone widths: the kind tag's 16% can't hold "TYPEFACE" at letter-spacing,
+   so it paints past its cell into the next column. We keep table-layout: fixed
+   — content-sized (auto) columns would reflow every time a filter changes the
+   visible rows — but re-cut the proportions for a narrow screen and trade
+   horizontal air (gutters, letter-spacing) for the room a small screen lacks. */
+@media (max-width: 640px) {
+  body { padding: 0 1rem 4rem; }
+
+  /* title and its chrome (about / ↓) stack instead of fighting for one line */
+  h1 { white-space: normal; padding-right: 0; }
+  .lt-chrome { position: static; gap: 1.1rem; padding-bottom: 0.6rem; }
+
+  /* re-cut for the narrow viewport; widths stay fixed so filtering never
+     reflows the columns. A column's mobileWidth (engine emits it as
+     --lt-mobile-width on the <col>) overrides its desktop width here; columns
+     without one keep their desktop proportion. */
+  .lt colgroup col[style*="--lt-mobile-width"] { width: var(--lt-mobile-width) !important; }
+
+  /* tighter gutters; the kind tag wraps and loses its wide tracking rather
+     than overflowing its cell */
+  .lt th, .lt td { padding-right: 0.6rem; }
+  .lt th { white-space: normal; }
+  .lt td.lt-tag { white-space: normal; letter-spacing: 0.06em; }
+  .lt td.lt-mono a { white-space: normal; }
+}
   </style>
 </head>
 <body>
@@ -171,19 +256,38 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 // values collapsed into rowspan cells whose labels stick under the header,
 // and row-level navigation to an external source. Hovering anywhere a click
 // would leave the site shows the destination URL in a corner status chip;
-// hovering anywhere a click would filter underlines the value (theme).
+// hovering anywhere a click would filter underlines the value (theme) and
+// previews the filter by fading the rows it would remove.
 //
 // All state lives in the URL, and filtering/sorting goes through the caller's
 // query(data, params) function — the same one served to sapi clients — so the
 // page and the API can never disagree. Pair with a theme stylesheet (e.g.
 // themes/swiss.css).
 //
+// defaultSort ("key" or "-key") declares the order the dataset already
+// arrives in: its header arrow renders (fainter, theme .implied) even with no
+// sort param in the URL, and clicking that header toggles direction instead
+// of cycling through an "unsorted" state that would look identical.
+//
+// A download dropdown (json / csv / xml of the current view) is added to the
+// page's h1 by default; disable with download: false, name the file with
+// downloadFilename, or point chromeContainer at a different title element.
+//
+// onApply(rows) fires after every render with the current view — companions
+// (e.g. calendar.js) hook it to stay in sync with filtering and sorting.
+// onHover(row|null) fires as the pointer crosses rows; the returned
+// highlight(row|null) fades every other row. Wire a companion's hover to
+// highlight (and vice versa) and the two views spotlight together.
+//
 // Column spec:
 //   id        - cell class name (also the sort key when sortable)
+//   name      - column name revealed on header hover (defaults to id)
 //   param     - URL parameter for filtering (omit for display-only)
 //   sortable  - include in sort cycling (uses `param` as the sort key)
 //   group     - collapse consecutive equal values into one rowspan cell
 //   width     - colgroup width, e.g. "27%"
+//   mobileWidth - colgroup width under the theme's narrow breakpoint (the
+//                 desktop proportions rarely fit a phone), e.g. "23%"
 //   variants  - theme hook class suffixes, e.g. ["strong"] -> .lt-strong
 //   key(row)   - identity used for grouping / constant detection
 //   label(row) - display text
@@ -194,7 +298,7 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 //                { label, value } filter chips (e.g. showtimes)
 
 function initListTable(config) {
-  const { data, query, columns, rowKey, rowHref } = config;
+  const { data, query, columns, rowKey, rowHref, defaultSort } = config;
   const table = typeof config.table === "string" ? document.querySelector(config.table) : config.table;
   table.classList.add("lt");
   if (rowHref) table.classList.add("lt-rowlink");
@@ -204,6 +308,9 @@ function initListTable(config) {
     for (const col of columns) {
       const colEl = document.createElement("col");
       if (col.width) colEl.style.width = col.width;
+      // a separate proportion the theme applies under its narrow breakpoint;
+      // widths stay fixed either way, so filtering never reflows the columns
+      if (col.mobileWidth) colEl.style.setProperty("--lt-mobile-width", col.mobileWidth);
       colgroup.appendChild(colEl);
     }
     table.prepend(colgroup);
@@ -227,6 +334,9 @@ function initListTable(config) {
       sortLink.appendChild(spanned("arrow"));
       th.appendChild(sortLink);
     }
+    const name = spanned("name");
+    name.textContent = col.name || col.id;
+    th.appendChild(name);
     if (col.param) {
       const clear = document.createElement("a");
       clear.className = "clear";
@@ -242,6 +352,7 @@ function initListTable(config) {
   const tbody = table.querySelector("tbody") || table.appendChild(document.createElement("tbody"));
   const groupCols = columns.filter((c) => c.group);
   let renderedRows = [];
+  let lastRows = [];
 
   function spanned(cls) {
     const span = document.createElement("span");
@@ -279,7 +390,7 @@ function initListTable(config) {
     const a = document.createElement("a");
     a.dataset.filter = `${param}=${value}`;
     a.href = `?${param}=${encodeURIComponent(value)}`;
-    a.textContent = label;
+    a.textContent = label ?? "";
     return a;
   }
 
@@ -296,6 +407,7 @@ function initListTable(config) {
     tbody.textContent = "";
     renderedRows = [];
     groupSpans = [];
+    lastRows = rows;
     rows.forEach((row, i) => {
       const tr = document.createElement("tr");
       const href = rowHref ? rowHref(row) : null;
@@ -311,7 +423,7 @@ function initListTable(config) {
               if (params[col.param] === item.value) chip.classList.add("lt-active-filter");
               td.appendChild(chip);
             } else {
-              td.appendChild(document.createTextNode(item.label));
+              td.appendChild(document.createTextNode(item.label ?? ""));
             }
           });
           tr.appendChild(td);
@@ -326,19 +438,20 @@ function initListTable(config) {
         td.className = variantClasses(col);
         if (span > 1) {
           td.rowSpan = span;
-          groupSpans.push({ td, lastIndex: i + span - 1 });
+          groupSpans.push({ td, firstIndex: i, lastIndex: i + span - 1 });
         }
         let content;
         const externalUrl = col.href ? col.href(row) : null;
         const cellValue = !col.href && col.param ? col.value(row) : null;
+        // missing values render as empty cells, never the string "undefined"
         if (externalUrl) {
           content = document.createElement("a");
           content.href = externalUrl;
-          content.textContent = col.label(row);
+          content.textContent = col.label(row) ?? "";
         } else if (cellValue) {
           content = filterLink(col.param, cellValue, col.label(row));
         } else {
-          content = document.createTextNode(col.label(row));
+          content = document.createTextNode(col.label(row) ?? "");
         }
         if (cellValue && col.group && params[col.param]) {
           content.classList.add("lt-active-filter");
@@ -369,17 +482,43 @@ function initListTable(config) {
       th.querySelector(".clear").hidden = !params[th.dataset.param];
     }
 
-    const sort = params.sort || "";
+    const sort = params.sort || defaultSort || "";
     const sortKey = sort.replace(/^-/, "");
     for (const th of thead.querySelectorAll("th[data-sort]")) {
       const active = th.dataset.sort === sortKey;
       th.classList.toggle("sorted", active);
-      th.querySelector(".arrow").textContent =
+      const arrow = th.querySelector(".arrow");
+      arrow.textContent =
         th.classList.contains("has-value") ? "" : !active ? "" : sort.startsWith("-") ? "↓" : "↑";
+      arrow.classList.toggle("implied", active && !params.sort);
     }
 
+    syncTitleBlock();
     adjustStickyRanges();
     updateExternalStatus();
+    if (config.onApply) config.onApply(lastRows.slice());
+  }
+
+  // The header sticks directly beneath the sticky title, and the title's own
+  // height is whatever the page's font, title length, and chrome add up to —
+  // not something CSS can know ahead of time. A static --title-block guess
+  // that comes out shorter than the real title pins the header too high, and
+  // rows scroll up into the strip the title no longer covers (bleed-through at
+  // the top). So measure the real title and write its height to --title-block;
+  // the theme keys the header offset (and the group-label offset) off it.
+  const stickyTitle =
+    (typeof config.stickyTitle === "string"
+      ? document.querySelector(config.stickyTitle)
+      : config.stickyTitle) ||
+    (typeof config.chromeContainer === "string"
+      ? document.querySelector(config.chromeContainer)
+      : config.chromeContainer) ||
+    document.querySelector("h1");
+
+  function syncTitleBlock() {
+    if (!stickyTitle) return;
+    const h = stickyTitle.getBoundingClientRect().height;
+    if (h) document.documentElement.style.setProperty("--title-block", `${Math.ceil(h)}px`);
   }
 
   // A pinned group label must never sit lower than the top of the last row it
@@ -413,7 +552,13 @@ function initListTable(config) {
   }
 
 
-  window.addEventListener("resize", adjustStickyRanges);
+  window.addEventListener("resize", () => {
+    syncTitleBlock();
+    adjustStickyRanges();
+  });
+  // Web fonts load after first paint and can change the title's height; the
+  // header offset has to follow it.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncTitleBlock);
 
   function modifiedClick(event) {
     return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
@@ -426,11 +571,16 @@ function initListTable(config) {
       event.preventDefault();
       if (event.target.closest(".clear") || th.classList.contains("has-value")) return;
       setParams((next) => {
-        const current = next.get("sort") || "";
         const key = th.dataset.sort;
-        if (current === `-${key}`) next.set("sort", key);
-        else if (current === key) next.delete("sort");
-        else next.set("sort", `-${key}`);
+        const current = next.get("sort") || defaultSort || "";
+        let target;
+        if (current === `-${key}`) target = key;
+        // ascending wraps to unsorted — except on the default-sort column,
+        // where unsorted IS one of its directions; wrap to descending instead
+        else if (current === key) target = defaultSort === key ? `-${key}` : "";
+        else target = `-${key}`;
+        if (!target || target === defaultSort) next.delete("sort");
+        else next.set("sort", target);
       });
     });
   }
@@ -533,6 +683,62 @@ function initListTable(config) {
     pointerY = -1;
     updateExternalStatus();
   });
+  // Fade rows failing a predicate. A group cell spanning several rows fades
+  // only when every row in its span fades.
+  function dimRows(keep) {
+    const dim = lastRows.map((row) => !keep(row));
+    renderedRows.forEach((tr, i) => tr.classList.toggle("lt-dim", dim[i]));
+    for (const { td, firstIndex, lastIndex } of groupSpans) {
+      let all = true;
+      for (let i = firstIndex; i <= lastIndex; i += 1) {
+        if (!dim[i]) { all = false; break; }
+      }
+      td.classList.toggle("lt-dim", all);
+    }
+  }
+
+  function clearDim() {
+    for (const el of table.querySelectorAll(".lt-dim")) el.classList.remove("lt-dim");
+  }
+
+  // Externally driven highlight (e.g. from a companion calendar): fade every
+  // row but this one. Does not echo onHover — drivers, not loops.
+  function highlight(row) {
+    if (row == null) clearDim();
+    else dimRows((r) => r === row);
+  }
+
+  // Filter preview: while the pointer rests on a value that would filter,
+  // fade the rows that filter would remove.
+  function previewFilter(link) {
+    const [key, value] = link.dataset.filter.split(/=(.*)/);
+    const params = currentParams();
+    if (params[key] === value) {
+      clearDim(); // clicking would clear, not narrow — preview the full view
+      return;
+    }
+    params[key] = value;
+    const survivors = new Set(query(data, params));
+    dimRows((row) => survivors.has(row));
+  }
+
+  // Hovering a row fades all the others (and tells onHover, so companions
+  // can mirror it); hovering a filter value previews that filter instead.
+  tbody.addEventListener("mouseover", (event) => {
+    const link = event.target.closest("a[data-filter]");
+    const tr = rowAtY(event.clientY) || event.target.closest("tr");
+    const row = tr ? lastRows[renderedRows.indexOf(tr)] ?? null : null;
+    if (link) previewFilter(link);
+    else if (row) dimRows((r) => r === row);
+    else clearDim();
+    if (config.onHover) config.onHover(row);
+  });
+  tbody.addEventListener("mouseout", (event) => {
+    if (event.relatedTarget && tbody.contains(event.relatedTarget)) return;
+    clearDim();
+    if (config.onHover) config.onHover(null);
+  });
+
   // Escape clears all filters and sorting.
   window.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
@@ -557,7 +763,25 @@ function initListTable(config) {
   });
 
   apply();
-  return { apply };
+
+  // Download chrome is part of the default table: every view you can reach
+  // should be a view you can take with you. Opt out with download: false;
+  // the dropdown lands in the page's h1 unless chromeContainer says otherwise.
+  if (config.download !== false) {
+    const chromeContainer =
+      typeof config.chromeContainer === "string"
+        ? document.querySelector(config.chromeContainer)
+        : config.chromeContainer || document.querySelector("h1");
+    if (chromeContainer) {
+      initDownload({
+        container: chromeContainer,
+        filename: config.downloadFilename,
+        rows: () => lastRows.slice(),
+      });
+    }
+  }
+
+  return { apply, rows: () => lastRows.slice(), highlight };
 }
 
 // Title-bar chrome: about/subscribe dropdowns share a right-aligned group.
@@ -594,6 +818,98 @@ function initAbout(config) {
   const { details, panel } = chromeDropdown(config.container, "lt-about", config.label || "about");
   panel.innerHTML = config.html;
   return details;
+}
+
+// Download dialog: a ↓ in the title chrome offering the CURRENT view's rows
+// (filtered and sorted exactly as on screen) as JSON, CSV, or XML. Serialization
+// happens client-side at click time, so what downloads is what the URL shows.
+// Config: { container, rows: () => row[], filename? }
+function initDownload(config) {
+  const filename = config.filename || "table";
+  const { details, panel } = chromeDropdown(config.container, "lt-download", config.label || "↓");
+  details.querySelector("summary").setAttribute("aria-label", "download this view");
+  const row = document.createElement("div");
+  row.className = "lt-download-row";
+
+  const formats = [
+    ["json", "application/json", (rows) => JSON.stringify(rows, null, 2)],
+    ["csv", "text/csv", toCSV],
+    ["xml", "application/xml", toXML],
+  ];
+  for (const [ext, mime, serialize] of formats) {
+    const a = document.createElement("a");
+    a.textContent = ext;
+    a.href = "#";
+    a.addEventListener("click", (event) => {
+      event.preventDefault();
+      const blob = new Blob([serialize(config.rows())], { type: `${mime};charset=utf-8` });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${filename}.${ext}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      details.open = false;
+    });
+    row.appendChild(a);
+  }
+  panel.appendChild(row);
+  return details;
+}
+
+// Column order: keys in first-seen order across all rows, so sparse fields
+// still get a column instead of silently vanishing.
+function rowColumns(rows) {
+  const keys = [];
+  const seen = new Set();
+  for (const row of rows) {
+    for (const key of Object.keys(row)) {
+      if (!seen.has(key)) {
+        seen.add(key);
+        keys.push(key);
+      }
+    }
+  }
+  return keys;
+}
+
+function toCSV(rows) {
+  const keys = rowColumns(rows);
+  const escape = (value) => {
+    const text = value === null || value === undefined ? "" : String(value);
+    return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+  };
+  const lines = [keys.map(escape).join(",")];
+  for (const row of rows) {
+    lines.push(keys.map((key) => escape(row[key])).join(","));
+  }
+  return lines.join("\r\n") + "\r\n";
+}
+
+function toXML(rows) {
+  const keys = rowColumns(rows);
+  const tag = (key) => {
+    const cleaned = key.replace(/[^A-Za-z0-9_-]/g, "_");
+    return /^[A-Za-z_]/.test(cleaned) ? cleaned : `_${cleaned}`;
+  };
+  const escape = (value) =>
+    String(value === null || value === undefined ? "" : value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  const lines = ['<?xml version="1.0" encoding="UTF-8"?>', "<rows>"];
+  for (const row of rows) {
+    lines.push("  <row>");
+    for (const key of keys) {
+      if (row[key] === undefined) continue;
+      lines.push(`    <${tag(key)}>${escape(row[key])}</${tag(key)}>`);
+    }
+    lines.push("  </row>");
+  }
+  lines.push("</rows>", "");
+  return lines.join("\n");
 }
 
 // Subscribe dialog: a feed selector and one row of links. Each feed:
@@ -649,6 +965,14 @@ function initSubscribe(config) {
 
 // The demo's query function — the same shape a sapi site would serve as
 // query.js. Exact-match params per column, plus sort=key / sort=-key.
+//
+// A sort key need not be a raw field: SORT_KEYS derives the comparable for
+// keys where the natural order isn't the stored string. People sort by last
+// name (full name breaks ties between siblings of a surname).
+const SORT_KEYS = {
+  designer: (r) => `${r.designer.split(" ").at(-1)} ${r.designer}`,
+};
+
 function query(data, params) {
   let rows = data.works;
   for (const key of ["designer", "kind", "year"]) {
@@ -658,37 +982,51 @@ function query(data, params) {
   const key = sort.replace(/^-/, "");
   if (key) {
     const dir = sort.startsWith("-") ? -1 : 1;
-    rows = [...rows].sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * dir);
+    const val = SORT_KEYS[key] || ((r) => r[key]);
+    rows = [...rows].sort((a, b) => {
+      const x = val(a);
+      const y = val(b);
+      return (x < y ? -1 : x > y ? 1 : 0) * dir;
+    });
   }
   return rows;
 }
 
-const data = {"works":[{"designer":"Adrian Frutiger","work":"Univers","year":1957,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Univers"},{"designer":"Adrian Frutiger","work":"Frutiger","year":1976,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Frutiger_(typeface)"},{"designer":"Armin Hofmann","work":"Giselle, Basler Freilichtspiele","year":1959,"kind":"poster","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Armin Hofmann","work":"Graphic Design Manual","year":1965,"kind":"book","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Emil Ruder","work":"Typographie: A Manual of Design","year":1967,"kind":"book","url":"https://en.wikipedia.org/wiki/Emil_Ruder"},{"designer":"Josef Müller-Brockmann","work":"Beethoven, Tonhalle Zürich","year":1955,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"Der Film, Kunstgewerbemuseum","year":1960,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"Grid Systems in Graphic Design","year":1981,"kind":"book","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Karl Gerstner","work":"Designing Programmes","year":1964,"kind":"book","url":"https://en.wikipedia.org/wiki/Karl_Gerstner"},{"designer":"Max Bill","work":"USA baut, Kunstgewerbemuseum","year":1945,"kind":"poster","url":"https://en.wikipedia.org/wiki/Max_Bill"},{"designer":"Max Bill","work":"Ulmer Hocker","year":1954,"kind":"object","url":"https://en.wikipedia.org/wiki/Ulm_stool"},{"designer":"Max Huber","work":"Gran Premio dell'Autodromo, Monza","year":1948,"kind":"poster","url":"https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"},{"designer":"Max Miedinger","work":"Helvetica","year":1957,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Helvetica"},{"designer":"Richard Paul Lohse","work":"Zürcher Künstler im Helmhaus","year":1952,"kind":"poster","url":"https://en.wikipedia.org/wiki/Richard_Paul_Lohse"},{"designer":"Siegfried Odermatt","work":"Union Safes","year":1968,"kind":"poster","url":"https://en.wikipedia.org/wiki/Siegfried_Odermatt"}]};
+const data = {"works":[{"designer":"Théo Ballmer","work":"Büro","year":1928,"kind":"poster","url":"https://en.wikipedia.org/wiki/Theo_Ballmer"},{"designer":"Théo Ballmer","work":"100 Jahre Lichtdruck","year":1928,"kind":"poster","url":"https://en.wikipedia.org/wiki/Theo_Ballmer"},{"designer":"Max Bill","work":"USA baut, Kunstgewerbemuseum","year":1945,"kind":"poster","url":"https://en.wikipedia.org/wiki/Max_Bill"},{"designer":"Max Bill","work":"Form","year":1952,"kind":"book","url":"https://en.wikipedia.org/wiki/Max_Bill"},{"designer":"Max Bill","work":"Ulmer Hocker","year":1954,"kind":"object","url":"https://en.wikipedia.org/wiki/Ulm_stool"},{"designer":"Max Bill","work":"Junghans Kitchen Clock","year":1956,"kind":"object","url":"https://en.wikipedia.org/wiki/Max_Bill"},{"designer":"Hermann Eidenbenz","work":"Clarendon","year":1953,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Clarendon_(typeface)"},{"designer":"Adrian Frutiger","work":"Univers","year":1957,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Univers"},{"designer":"Adrian Frutiger","work":"OCR-B","year":1968,"kind":"typeface","url":"https://en.wikipedia.org/wiki/OCR-B"},{"designer":"Adrian Frutiger","work":"Frutiger","year":1976,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Frutiger_(typeface)"},{"designer":"Adrian Frutiger","work":"Avenir","year":1988,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Avenir_(typeface)"},{"designer":"Karl Gerstner","work":"Designing Programmes","year":1964,"kind":"book","url":"https://en.wikipedia.org/wiki/Karl_Gerstner"},{"designer":"Karl Gerstner","work":"Compendium for Literates","year":1972,"kind":"book","url":"https://en.wikipedia.org/wiki/Karl_Gerstner"},{"designer":"Walter Herdeg","work":"Graphis","year":1944,"kind":"magazine","url":"https://en.wikipedia.org/wiki/Graphis"},{"designer":"Armin Hofmann","work":"Stadt Theater Basel","year":1954,"kind":"poster","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Armin Hofmann","work":"Giselle, Basler Freilichtspiele","year":1959,"kind":"poster","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Armin Hofmann","work":"Wilhelm Tell","year":1963,"kind":"poster","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Armin Hofmann","work":"Graphic Design Manual","year":1965,"kind":"book","url":"https://en.wikipedia.org/wiki/Armin_Hofmann"},{"designer":"Max Huber","work":"Gran Premio dell'Autodromo, Monza","year":1948,"kind":"poster","url":"https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"},{"designer":"Max Huber","work":"La Rinascente","year":1950,"kind":"identity","url":"https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"},{"designer":"Ernst Keller","work":"Das Neue Heim","year":1926,"kind":"poster","url":"https://en.wikipedia.org/wiki/Ernst_Keller_(graphic_designer)"},{"designer":"Lora Lamm","work":"Pirelli","year":1959,"kind":"poster","url":"https://en.wikipedia.org/wiki/Lora_Lamm"},{"designer":"Herbert Leupin","work":"Tribune de Lausanne","year":1955,"kind":"poster","url":"https://en.wikipedia.org/wiki/Herbert_Leupin"},{"designer":"Richard Paul Lohse","work":"Zürcher Künstler im Helmhaus","year":1952,"kind":"poster","url":"https://en.wikipedia.org/wiki/Richard_Paul_Lohse"},{"designer":"Herbert Matter","work":"Pontresina Engadin","year":1935,"kind":"poster","url":"https://en.wikipedia.org/wiki/Herbert_Matter"},{"designer":"Herbert Matter","work":"All Roads Lead to Switzerland","year":1935,"kind":"poster","url":"https://en.wikipedia.org/wiki/Herbert_Matter"},{"designer":"Max Miedinger","work":"Helvetica","year":1957,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Helvetica"},{"designer":"Josef Müller-Brockmann","work":"Schützt das Kind!","year":1953,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"Beethoven, Tonhalle Zürich","year":1955,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"musica viva","year":1957,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"Der Film, Kunstgewerbemuseum","year":1960,"kind":"poster","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"The Graphic Artist and his Design Problems","year":1961,"kind":"book","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Josef Müller-Brockmann","work":"Grid Systems in Graphic Design","year":1981,"kind":"book","url":"https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"},{"designer":"Hans Neuburg","work":"Neue Grafik","year":1958,"kind":"magazine","url":"https://en.wikipedia.org/wiki/Neue_Grafik"},{"designer":"Siegfried Odermatt","work":"Union Safes","year":1968,"kind":"poster","url":"https://en.wikipedia.org/wiki/Siegfried_Odermatt"},{"designer":"Celestino Piatti","work":"dtv book covers","year":1961,"kind":"identity","url":"https://en.wikipedia.org/wiki/Celestino_Piatti"},{"designer":"Emil Ruder","work":"Typographie: A Manual of Design","year":1967,"kind":"book","url":"https://en.wikipedia.org/wiki/Emil_Ruder"},{"designer":"Rosmarie Tissi","work":"Druckerei Anton Schöb","year":1981,"kind":"poster","url":"https://en.wikipedia.org/wiki/Rosmarie_Tissi"},{"designer":"Niklaus Troxler","work":"McCoy Tyner Sextet","year":1980,"kind":"poster","url":"https://en.wikipedia.org/wiki/Niklaus_Troxler"},{"designer":"Jan Tschichold","work":"Die neue Typographie","year":1928,"kind":"book","url":"https://en.wikipedia.org/wiki/Die_neue_Typographie"},{"designer":"Jan Tschichold","work":"Der Berufsphotograph","year":1938,"kind":"poster","url":"https://en.wikipedia.org/wiki/Jan_Tschichold"},{"designer":"Jan Tschichold","work":"Sabon","year":1967,"kind":"typeface","url":"https://en.wikipedia.org/wiki/Sabon"},{"designer":"Carlo Vivarelli","work":"Für das Alter","year":1949,"kind":"poster","url":"https://en.wikipedia.org/wiki/Carlo_Vivarelli"},{"designer":"Wolfgang Weingart","work":"Typografische Monatsblätter covers","year":1973,"kind":"magazine","url":"https://en.wikipedia.org/wiki/Wolfgang_Weingart"}]};
 
 // Page-side wiring for the demo: column spec and chrome. Written as a plain
 // script (no imports/exports) — the build inlines it after the engine, the
 // query function, and the data, which it references as globals.
-initListTable({
+const works = initListTable({
   table: "#works",
   data,
   query,
   rowHref: (r) => r.url,
+  defaultSort: "designer", // data.json ships ordered by designer
+  downloadFilename: "swiss-graphic-design",
+
   columns: [
     {
       id: "designer", param: "designer", sortable: true, group: true,
-      width: "28%", variants: ["strong"],
+      width: "28%", mobileWidth: "26%", variants: ["strong"],
       key: (r) => r.designer, label: (r) => r.designer, value: (r) => r.designer,
     },
     {
-      id: "work", width: "44%",
+      id: "work", width: "44%", mobileWidth: "38%",
       label: (r) => r.work, href: (r) => r.url,
     },
     {
-      id: "year", param: "year", sortable: true, width: "12%", variants: ["mono"],
+      // group: runs of equal years collapse into one rowspan cell whose
+      // hairline ditto shows how far the value extends
+      id: "year", param: "year", sortable: true, group: true,
+      width: "12%", mobileWidth: "13%", variants: ["mono"],
       key: (r) => r.year, label: (r) => String(r.year), value: (r) => String(r.year),
     },
     {
-      id: "kind", param: "kind", width: "16%", variants: ["tag", "muted"],
+      // kind's uppercase tags ("TYPEFACE") need more of a narrow screen than
+      // their 16% desktop share
+      id: "kind", param: "kind", group: true,
+      width: "16%", mobileWidth: "23%", variants: ["tag", "muted"],
       key: (r) => r.kind, label: (r) => r.kind, value: (r) => r.kind,
     },
   ],

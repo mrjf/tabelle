@@ -1,11 +1,67 @@
 {
   "works": [
     {
+      "designer": "Théo Ballmer",
+      "work": "Büro",
+      "year": 1928,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Theo_Ballmer"
+    },
+    {
+      "designer": "Théo Ballmer",
+      "work": "100 Jahre Lichtdruck",
+      "year": 1928,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Theo_Ballmer"
+    },
+    {
+      "designer": "Max Bill",
+      "work": "USA baut, Kunstgewerbemuseum",
+      "year": 1945,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Max_Bill"
+    },
+    {
+      "designer": "Max Bill",
+      "work": "Form",
+      "year": 1952,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Max_Bill"
+    },
+    {
+      "designer": "Max Bill",
+      "work": "Ulmer Hocker",
+      "year": 1954,
+      "kind": "object",
+      "url": "https://en.wikipedia.org/wiki/Ulm_stool"
+    },
+    {
+      "designer": "Max Bill",
+      "work": "Junghans Kitchen Clock",
+      "year": 1956,
+      "kind": "object",
+      "url": "https://en.wikipedia.org/wiki/Max_Bill"
+    },
+    {
+      "designer": "Hermann Eidenbenz",
+      "work": "Clarendon",
+      "year": 1953,
+      "kind": "typeface",
+      "url": "https://en.wikipedia.org/wiki/Clarendon_(typeface)"
+    },
+    {
       "designer": "Adrian Frutiger",
       "work": "Univers",
       "year": 1957,
       "kind": "typeface",
       "url": "https://en.wikipedia.org/wiki/Univers"
+    },
+    {
+      "designer": "Adrian Frutiger",
+      "work": "OCR-B",
+      "year": 1968,
+      "kind": "typeface",
+      "url": "https://en.wikipedia.org/wiki/OCR-B"
     },
     {
       "designer": "Adrian Frutiger",
@@ -15,9 +71,51 @@
       "url": "https://en.wikipedia.org/wiki/Frutiger_(typeface)"
     },
     {
+      "designer": "Adrian Frutiger",
+      "work": "Avenir",
+      "year": 1988,
+      "kind": "typeface",
+      "url": "https://en.wikipedia.org/wiki/Avenir_(typeface)"
+    },
+    {
+      "designer": "Karl Gerstner",
+      "work": "Designing Programmes",
+      "year": 1964,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Karl_Gerstner"
+    },
+    {
+      "designer": "Karl Gerstner",
+      "work": "Compendium for Literates",
+      "year": 1972,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Karl_Gerstner"
+    },
+    {
+      "designer": "Walter Herdeg",
+      "work": "Graphis",
+      "year": 1944,
+      "kind": "magazine",
+      "url": "https://en.wikipedia.org/wiki/Graphis"
+    },
+    {
+      "designer": "Armin Hofmann",
+      "work": "Stadt Theater Basel",
+      "year": 1954,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Armin_Hofmann"
+    },
+    {
       "designer": "Armin Hofmann",
       "work": "Giselle, Basler Freilichtspiele",
       "year": 1959,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Armin_Hofmann"
+    },
+    {
+      "designer": "Armin Hofmann",
+      "work": "Wilhelm Tell",
+      "year": 1963,
       "kind": "poster",
       "url": "https://en.wikipedia.org/wiki/Armin_Hofmann"
     },
@@ -29,16 +127,86 @@
       "url": "https://en.wikipedia.org/wiki/Armin_Hofmann"
     },
     {
-      "designer": "Emil Ruder",
-      "work": "Typographie: A Manual of Design",
-      "year": 1967,
-      "kind": "book",
-      "url": "https://en.wikipedia.org/wiki/Emil_Ruder"
+      "designer": "Max Huber",
+      "work": "Gran Premio dell'Autodromo, Monza",
+      "year": 1948,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"
+    },
+    {
+      "designer": "Max Huber",
+      "work": "La Rinascente",
+      "year": 1950,
+      "kind": "identity",
+      "url": "https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"
+    },
+    {
+      "designer": "Ernst Keller",
+      "work": "Das Neue Heim",
+      "year": 1926,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Ernst_Keller_(graphic_designer)"
+    },
+    {
+      "designer": "Lora Lamm",
+      "work": "Pirelli",
+      "year": 1959,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Lora_Lamm"
+    },
+    {
+      "designer": "Herbert Leupin",
+      "work": "Tribune de Lausanne",
+      "year": 1955,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Herbert_Leupin"
+    },
+    {
+      "designer": "Richard Paul Lohse",
+      "work": "Zürcher Künstler im Helmhaus",
+      "year": 1952,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Richard_Paul_Lohse"
+    },
+    {
+      "designer": "Herbert Matter",
+      "work": "Pontresina Engadin",
+      "year": 1935,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Herbert_Matter"
+    },
+    {
+      "designer": "Herbert Matter",
+      "work": "All Roads Lead to Switzerland",
+      "year": 1935,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Herbert_Matter"
+    },
+    {
+      "designer": "Max Miedinger",
+      "work": "Helvetica",
+      "year": 1957,
+      "kind": "typeface",
+      "url": "https://en.wikipedia.org/wiki/Helvetica"
+    },
+    {
+      "designer": "Josef Müller-Brockmann",
+      "work": "Schützt das Kind!",
+      "year": 1953,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"
     },
     {
       "designer": "Josef Müller-Brockmann",
       "work": "Beethoven, Tonhalle Zürich",
       "year": 1955,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"
+    },
+    {
+      "designer": "Josef Müller-Brockmann",
+      "work": "musica viva",
+      "year": 1957,
       "kind": "poster",
       "url": "https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"
     },
@@ -51,52 +219,24 @@
     },
     {
       "designer": "Josef Müller-Brockmann",
+      "work": "The Graphic Artist and his Design Problems",
+      "year": 1961,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"
+    },
+    {
+      "designer": "Josef Müller-Brockmann",
       "work": "Grid Systems in Graphic Design",
       "year": 1981,
       "kind": "book",
       "url": "https://en.wikipedia.org/wiki/Josef_M%C3%BCller-Brockmann"
     },
     {
-      "designer": "Karl Gerstner",
-      "work": "Designing Programmes",
-      "year": 1964,
-      "kind": "book",
-      "url": "https://en.wikipedia.org/wiki/Karl_Gerstner"
-    },
-    {
-      "designer": "Max Bill",
-      "work": "USA baut, Kunstgewerbemuseum",
-      "year": 1945,
-      "kind": "poster",
-      "url": "https://en.wikipedia.org/wiki/Max_Bill"
-    },
-    {
-      "designer": "Max Bill",
-      "work": "Ulmer Hocker",
-      "year": 1954,
-      "kind": "object",
-      "url": "https://en.wikipedia.org/wiki/Ulm_stool"
-    },
-    {
-      "designer": "Max Huber",
-      "work": "Gran Premio dell'Autodromo, Monza",
-      "year": 1948,
-      "kind": "poster",
-      "url": "https://en.wikipedia.org/wiki/Max_Huber_(graphic_designer)"
-    },
-    {
-      "designer": "Max Miedinger",
-      "work": "Helvetica",
-      "year": 1957,
-      "kind": "typeface",
-      "url": "https://en.wikipedia.org/wiki/Helvetica"
-    },
-    {
-      "designer": "Richard Paul Lohse",
-      "work": "Zürcher Künstler im Helmhaus",
-      "year": 1952,
-      "kind": "poster",
-      "url": "https://en.wikipedia.org/wiki/Richard_Paul_Lohse"
+      "designer": "Hans Neuburg",
+      "work": "Neue Grafik",
+      "year": 1958,
+      "kind": "magazine",
+      "url": "https://en.wikipedia.org/wiki/Neue_Grafik"
     },
     {
       "designer": "Siegfried Odermatt",
@@ -104,6 +244,69 @@
       "year": 1968,
       "kind": "poster",
       "url": "https://en.wikipedia.org/wiki/Siegfried_Odermatt"
+    },
+    {
+      "designer": "Celestino Piatti",
+      "work": "dtv book covers",
+      "year": 1961,
+      "kind": "identity",
+      "url": "https://en.wikipedia.org/wiki/Celestino_Piatti"
+    },
+    {
+      "designer": "Emil Ruder",
+      "work": "Typographie: A Manual of Design",
+      "year": 1967,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Emil_Ruder"
+    },
+    {
+      "designer": "Rosmarie Tissi",
+      "work": "Druckerei Anton Schöb",
+      "year": 1981,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Rosmarie_Tissi"
+    },
+    {
+      "designer": "Niklaus Troxler",
+      "work": "McCoy Tyner Sextet",
+      "year": 1980,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Niklaus_Troxler"
+    },
+    {
+      "designer": "Jan Tschichold",
+      "work": "Die neue Typographie",
+      "year": 1928,
+      "kind": "book",
+      "url": "https://en.wikipedia.org/wiki/Die_neue_Typographie"
+    },
+    {
+      "designer": "Jan Tschichold",
+      "work": "Der Berufsphotograph",
+      "year": 1938,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Jan_Tschichold"
+    },
+    {
+      "designer": "Jan Tschichold",
+      "work": "Sabon",
+      "year": 1967,
+      "kind": "typeface",
+      "url": "https://en.wikipedia.org/wiki/Sabon"
+    },
+    {
+      "designer": "Carlo Vivarelli",
+      "work": "Für das Alter",
+      "year": 1949,
+      "kind": "poster",
+      "url": "https://en.wikipedia.org/wiki/Carlo_Vivarelli"
+    },
+    {
+      "designer": "Wolfgang Weingart",
+      "work": "Typografische Monatsblätter covers",
+      "year": 1973,
+      "kind": "magazine",
+      "url": "https://en.wikipedia.org/wiki/Wolfgang_Weingart"
     }
   ]
 }

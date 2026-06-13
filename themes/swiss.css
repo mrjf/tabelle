@@ -57,23 +57,37 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
   position: absolute; top: 0; line-height: 1.6rem;
   font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
 }
-.lt th .arrow { left: 0; opacity: 0.55; }
+/* sort arrow rides the right edge of the header, inside the column gutter */
+.lt th .arrow { right: 0.3rem; opacity: 0.55; }
+/* the default order: real, but not something anyone asked for */
+.lt th .arrow.implied { opacity: 0.3; }
 .lt th .clear { right: 1rem; opacity: 0; cursor: pointer; }
+/* the column's own name, revealed on hover — headers stay bare otherwise */
+.lt th .name {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+  display: inline-block; line-height: 1.6rem;
+  opacity: 0;
+}
+.lt th:hover .name { opacity: 1; }
 .lt th.filtered:hover .clear { opacity: 0.45; }
 .lt th .clear:hover { opacity: 0.85; }
 .lt th .value {
   font-size: 0.8rem; font-weight: 500; line-height: 1.6rem; opacity: 0.85;
-  padding-left: 1.1rem; display: inline-block;
+  display: inline-block;
 }
 .lt th .value.implied { opacity: 0.68; font-weight: 400; }
 .lt th.has-value .arrow { display: none; }
-.lt th.has-value .value { padding-left: 0; }
 .lt th.has-value:not(.filtered) { cursor: default; }
 
 .lt td { font-size: 0.875rem; line-height: 1.5; }
 .lt tbody a[data-filter] { cursor: pointer; }
 /* underline = a click here filters */
 .lt tbody a[data-filter]:hover { text-decoration: underline; }
+/* filter preview: rows the hovered filter would remove recede; rowspan group
+   cells are dimmed by the engine only when their whole span would go */
+.lt td { transition: opacity 0.12s ease; }
+.lt tbody tr.lt-dim > td:not([rowspan]), .lt tbody td.lt-dim { opacity: 0.4; }
 /* ditto mark: a hairline showing how far a pinned value's range extends */
 /* overflow:clip (NOT hidden — hidden would break sticky) hard-clips label
    painting to the cell, so no engine's compositing can bleed it over the
@@ -115,6 +129,45 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 .lt td.lt-nowrap { white-space: nowrap; }
 .lt td.lt-mono a { white-space: nowrap; }
 
+/* ---- calendar (calendar.js): one bare-bones week grid, busy weeks only ---- */
+.lt-cal { margin-top: 3.5rem; margin-bottom: 2.5rem; }
+.lt-cal table { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+.lt-cal th {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 400; text-align: left;
+  padding: 0 0.5rem 0.3rem 0; border-bottom: 1px solid var(--fg);
+}
+.lt-cal td {
+  vertical-align: top; height: 5rem; padding: 0.3rem 0.5rem 0.3rem 0;
+  border-bottom: 1px solid var(--line); font-size: 0.7rem; line-height: 1.35;
+  overflow: hidden;
+}
+.lt-cal-day {
+  font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--muted);
+  display: block; margin-bottom: 0.15rem;
+}
+.lt-cal td.lt-cal-busy .lt-cal-day { color: var(--fg); }
+.lt-cal-event { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: opacity 0.12s ease; }
+/* spotlight: hovering an entry here or a row in the table fades the rest */
+.lt-cal-event.lt-dim { opacity: 0.3; }
+
+/* ---- map (map.js): real outlines on no-label tiles, Leaflet underneath ---- */
+.lt-map { margin-top: 3.5rem; margin-bottom: 2.5rem; height: 24rem; }
+.lt-map .leaflet-container { height: 100%; background: var(--bg); }
+/* labels come only from the rows; quiet mono, no tooltip bubble */
+.lt-map .lt-map-label {
+  background: none; border: 0; box-shadow: none; padding: 0;
+  color: var(--fg); opacity: 0.7;
+  font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; letter-spacing: 0.04em;
+}
+.lt-map .lt-map-label::before { display: none; }
+.lt-map .leaflet-control-attribution {
+  background: none; color: var(--muted);
+  font-family: "IBM Plex Mono", monospace; font-size: 0.6rem;
+}
+.lt-map .leaflet-control-attribution a { color: var(--muted); }
+
 /* ---- title-bar chrome (about / subscribe) ---- */
 .lt-chrome {
   position: absolute; right: 0; bottom: 1.1rem;
@@ -131,6 +184,10 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
   background: var(--bg); border: 1px solid var(--line); padding: 0.55rem 0.8rem;
 }
 .lt-subscribe-row { display: flex; gap: 0.8rem; align-items: center; }
+.lt-download summary { font-size: 0.9rem; }
+.lt-download-row { display: flex; gap: 0.8rem; align-items: center; }
+.lt-download-row a { color: var(--muted); }
+.lt-download-row a:hover { color: var(--fg); }
 .lt-subscribe-row select {
   font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
   background: var(--bg); color: var(--fg); border: 1px solid var(--line);
@@ -146,3 +203,31 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
 .lt-about-panel p { margin: 0 0 0.7rem; }
 .lt-about-panel p:last-child { margin-bottom: 0; }
 .lt-about-panel a { text-decoration: underline; }
+
+/* ---- narrow viewports ---- */
+/* The desktop column proportions (the colgroup) and the no-wrap header collide
+   at phone widths: the kind tag's 16% can't hold "TYPEFACE" at letter-spacing,
+   so it paints past its cell into the next column. We keep table-layout: fixed
+   — content-sized (auto) columns would reflow every time a filter changes the
+   visible rows — but re-cut the proportions for a narrow screen and trade
+   horizontal air (gutters, letter-spacing) for the room a small screen lacks. */
+@media (max-width: 640px) {
+  body { padding: 0 1rem 4rem; }
+
+  /* title and its chrome (about / ↓) stack instead of fighting for one line */
+  h1 { white-space: normal; padding-right: 0; }
+  .lt-chrome { position: static; gap: 1.1rem; padding-bottom: 0.6rem; }
+
+  /* re-cut for the narrow viewport; widths stay fixed so filtering never
+     reflows the columns. A column's mobileWidth (engine emits it as
+     --lt-mobile-width on the <col>) overrides its desktop width here; columns
+     without one keep their desktop proportion. */
+  .lt colgroup col[style*="--lt-mobile-width"] { width: var(--lt-mobile-width) !important; }
+
+  /* tighter gutters; the kind tag wraps and loses its wide tracking rather
+     than overflowing its cell */
+  .lt th, .lt td { padding-right: 0.6rem; }
+  .lt th { white-space: normal; }
+  .lt td.lt-tag { white-space: normal; letter-spacing: 0.06em; }
+  .lt td.lt-mono a { white-space: normal; }
+}

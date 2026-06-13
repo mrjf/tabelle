@@ -13,7 +13,7 @@
           "designer": { "type": "string" },
           "work": { "type": "string" },
           "year": { "type": "integer" },
-          "kind": { "type": "string", "enum": ["poster", "book", "typeface", "object"] },
+          "kind": { "type": "string", "enum": ["poster", "book", "typeface", "object", "magazine", "identity"] },
           "url": { "type": "string", "format": "uri" }
         }
       }
@@ -23,8 +23,8 @@
     "params": {
       "designer": "filter by designer (exact match)",
       "year": "filter by year (exact match)",
-      "kind": "filter by kind (exact match: poster | book | typeface | object)",
-      "sort": "sort key: designer | year | kind; prefix - for descending"
+      "kind": "filter by kind (exact match: poster | book | typeface | object | magazine | identity)",
+      "sort": "sort key: designer | year | kind; prefix - for descending; designer orders by last name"
     }
   }
 }

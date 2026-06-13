@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { JSDOM } from "jsdom";
+import data from "../demo/data.json" with { type: "json" };
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const demoFile = join(root, "demo", "index.html");
@@ -31,7 +32,7 @@ test("the built demo renders from file:// with no external resources", async () 
   assert.ok(doc.location.href.startsWith("file://"), "loaded via file://");
   assert.equal(doc.querySelectorAll("script[src], link[rel=stylesheet]").length, 0,
     "no external scripts or stylesheets");
-  assert.equal(doc.querySelectorAll("tbody tr").length, 15, "all works render");
+  assert.equal(doc.querySelectorAll("tbody tr").length, data.works.length, "all works render");
   assert.ok(doc.querySelector(".lt-about"), "about chrome renders");
 });
 
@@ -42,8 +43,8 @@ test("filtering works on file:// even though the url cannot change", async () =>
     .find((a) => a.dataset.filter === "designer=Max Bill");
   chip.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true, cancelable: true }));
   const rows = doc.querySelectorAll("tbody tr");
-  assert.equal(rows.length, 2, "filtered to Max Bill's two works");
-  assert.match(rows[1].textContent, /Ulmer Hocker/);
+  assert.equal(rows.length, 4, "filtered to Max Bill's four works");
+  assert.match(rows[2].textContent, /Ulmer Hocker/);
 });
 
 test("the demo directory is a sapi site: data.json, query.js, schema.json agree", async () => {
