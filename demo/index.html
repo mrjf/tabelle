@@ -228,10 +228,17 @@ table.lt { border-collapse: separate; border-spacing: 0; width: 100%; table-layo
   h1 { white-space: normal; padding-right: 0; }
   .lt-chrome { position: static; gap: 1.1rem; padding-bottom: 0.6rem; }
 
-  /* columns flagged mobileHidden drop out: zero the <col> so the survivors
-     re-proportion, and hide every header/cell that carries the class */
-  .lt colgroup col.lt-mobile-hidden { width: 0 !important; }
-  .lt th.lt-mobile-hidden, .lt td.lt-mobile-hidden { display: none; }
+  /* columns flagged mobileHidden drop out. Two parts, both required under
+     table-layout: fixed:
+       visibility: collapse removes the column. display:none on the cells is
+       WRONG — in a fixed layout it desyncs the col→cell mapping, so every
+       visible cell *after* a hidden run collapses to zero width and its
+       content spills onto its neighbour.
+       width: 0 hands the freed track back to the survivors. Without it the
+       collapsed column keeps reserving its percentage, so the visible columns
+       (their own percentages) only fill part of the table and the rest is a
+       dead gap on the right. */
+  .lt colgroup col.lt-mobile-hidden { visibility: collapse; width: 0 !important; }
 
   /* re-cut for the narrow viewport; widths stay fixed so filtering never
      reflows the columns. A column's mobileWidth (engine emits it as
