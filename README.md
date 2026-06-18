@@ -1,30 +1,10 @@
 # tabelle
 
-> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor.
+Simple tables inspired by swiss.ziki.boo .
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+Implements [sapi](https://github.com/deshitifai/sapi): all data is downloadable from static pages that can be used as APIs.
 
-## Install
-
-```console
-$ npm install @mrjf/tabelle
-```
-
-## Quick start
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
-
-```js
-// lorem ipsum
-```
-
-## Docs
-
-Lorem ipsum — see [DOCS.md](DOCS.md) for the full reference.
-
-```
-Use https://github.com/mrjf/tabelle/blob/main/DOCS.md to render a tabelle table of ...
-```
+<img width="1105" height="670" alt="image" src="https://github.com/user-attachments/assets/9b3bb17b-e6f2-4a57-9ee7-d14caa4945d7" />
 
 ## License
 
