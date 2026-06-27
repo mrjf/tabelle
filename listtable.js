@@ -466,20 +466,6 @@ export function initListTable(config) {
     pointerY = -1;
     updateExternalStatus();
   });
-  // Fade rows failing a predicate. A group cell spanning several rows fades
-  // only when every row in its span fades.
-  function dimRows(keep) {
-    const dim = lastRows.map((row) => !keep(row));
-    renderedRows.forEach((tr, i) => tr.classList.toggle("lt-dim", dim[i]));
-    for (const { td, firstIndex, lastIndex } of groupSpans) {
-      let all = true;
-      for (let i = firstIndex; i <= lastIndex; i += 1) {
-        if (!dim[i]) { all = false; break; }
-      }
-      td.classList.toggle("lt-dim", all);
-    }
-  }
-
   function clearDim() {
     for (const el of table.querySelectorAll(".lt-dim")) el.classList.remove("lt-dim");
   }
@@ -488,9 +474,18 @@ export function initListTable(config) {
     for (const el of table.querySelectorAll(".lt-mark")) el.classList.remove("lt-mark");
   }
 
-  function markRow(row) {
+  function clearPreview() {
     clearDim();
     clearMark();
+  }
+
+  function markRows(keep) {
+    clearPreview();
+    renderedRows.forEach((tr, i) => tr.classList.toggle("lt-mark", keep(lastRows[i])));
+  }
+
+  function markRow(row) {
+    clearPreview();
     if (row == null) return;
     const index = rowIndex(row);
     if (index >= 0 && renderedRows[index]) renderedRows[index].classList.add("lt-mark");
@@ -503,17 +498,16 @@ export function initListTable(config) {
   }
 
   // Filter preview: while the pointer rests on a value that would filter,
-  // fade the rows that filter would remove.
+  // mark the matching rows with the same accent used for row hover.
   function previewParam(key, value) {
-    clearMark();
     const params = currentParams();
     if (params[key] === value) {
-      clearDim(); // clicking would clear, not narrow — preview the full view
+      clearPreview(); // clicking would clear, not narrow — preview the full view
       return;
     }
     params[key] = value;
     const survivors = new Set(query(data, params).map(rowIdentity));
-    dimRows((row) => survivors.has(rowIdentity(row)));
+    markRows((row) => survivors.has(rowIdentity(row)));
   }
 
   function previewFilter(link) {
@@ -529,16 +523,12 @@ export function initListTable(config) {
     const row = tr ? lastRows[renderedRows.indexOf(tr)] ?? null : null;
     if (link) previewFilter(link);
     else if (row) markRow(row);
-    else {
-      clearDim();
-      clearMark();
-    }
+    else clearPreview();
     if (config.onHover) config.onHover(row);
   });
   tbody.addEventListener("mouseout", (event) => {
     if (event.relatedTarget && tbody.contains(event.relatedTarget)) return;
-    clearDim();
-    clearMark();
+    clearPreview();
     if (config.onHover) config.onHover(null);
   });
 
@@ -593,7 +583,7 @@ export function initListTable(config) {
     setParam,
     setParams,
     previewParam,
-    clearPreview: clearDim,
+    clearPreview,
     onState(listener) {
       stateListeners.add(listener);
       return () => stateListeners.delete(listener);

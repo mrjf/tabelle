@@ -92,7 +92,7 @@ All state lives in the URL. `?designer=Max+Bill&sort=-year` is a view; reload it
 | click a header | sort cycles: descending → ascending → unsorted; the `defaultSort` column just toggles |
 | hover a header | the column's name appears (headers stay bare otherwise) |
 | click a cell value | filter to that value; click it again to clear |
-| hover a cell value | underline — the sign that a click here filters; rows the filter would remove fade back |
+| hover a cell value | underline — the sign that a click here filters; matching rows get the red accent bar |
 | click a filtered header | clear that filter (× appears on hover) |
 | click anywhere else in a row | navigate to the row's source link |
 | hover where a click would go external | the destination URL appears in a corner status chip |

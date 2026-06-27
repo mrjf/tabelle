@@ -119,14 +119,16 @@ test("hovering a dateline date previews the same date filter in the table", asyn
     pretendToBeVisual: true,
   });
   const doc = dom.window.document;
+  assert.match(doc.querySelector("style").textContent, /\.lt tbody tr\.lt-mark > td:last-child \{ box-shadow: inset -2px 0 0 #C8102E; \}/);
   const june4 = doc.querySelector('.lt-dateline-day[data-date="2026-06-04"]');
   june4.dispatchEvent(new dom.window.MouseEvent("mouseover", { bubbles: true }));
-  const dimmed = [...doc.querySelectorAll("tbody tr.lt-dim")];
-  assert.equal(dimmed.length, 11);
-  assert.match(doc.querySelector("tbody tr:not(.lt-dim)").textContent, /Material Futures Workshop/);
+  const marked = [...doc.querySelectorAll("tbody tr.lt-mark")];
+  assert.equal(marked.length, 1);
+  assert.match(marked[0].textContent, /Material Futures Workshop/);
+  assert.equal(doc.querySelectorAll("tbody tr.lt-dim").length, 0);
 
   doc.querySelector(".lt-dateline").dispatchEvent(new dom.window.MouseEvent("mouseout", { bubbles: true }));
-  assert.equal(doc.querySelectorAll("tbody tr.lt-dim").length, 0);
+  assert.equal(doc.querySelectorAll("tbody tr.lt-mark").length, 0);
 });
 
 test("the marin overflow demonstrator keeps long time values in their column", async () => {

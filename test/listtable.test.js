@@ -219,22 +219,23 @@ function hoverChip(chip, type = "mouseover") {
   chip.dispatchEvent(new dom.window.MouseEvent(type, { bubbles: true }));
 }
 
-test("hovering a filter value fades the rows it would remove", () => {
+test("hovering a filter value marks the rows it would keep", () => {
   init();
   const chip = [...dom.window.document.querySelectorAll("a[data-filter]")]
     .find((a) => a.dataset.filter === "kind=typeface");
   hoverChip(chip);
-  const dimmed = rows().filter((tr) => tr.classList.contains("lt-dim"));
-  assert.equal(dimmed.length, data.works.length - 7, "every non-typeface row fades");
-  assert.ok(!chip.closest("tr").classList.contains("lt-dim"), "the hovered row survives");
+  const marked = rows().filter((tr) => tr.classList.contains("lt-mark"));
+  assert.equal(marked.length, query(data, { kind: "typeface" }).length, "every matching row is marked");
+  assert.ok(chip.closest("tr").classList.contains("lt-mark"), "the hovered row is marked");
+  assert.equal(dom.window.document.querySelectorAll(".lt-dim").length, 0, "preview does not fade rows");
 
   const groupTd = (name) => [...dom.window.document.querySelectorAll("td.designer[rowspan]")]
     .find((td) => td.textContent.includes(name));
-  assert.ok(!groupTd("Frutiger").classList.contains("lt-dim"), "all-typeface group stays");
-  assert.ok(groupTd("Müller-Brockmann").classList.contains("lt-dim"), "no-typeface group fades");
+  assert.ok(!groupTd("Frutiger").classList.contains("lt-dim"), "group cells do not dim");
+  assert.ok(!groupTd("Müller-Brockmann").classList.contains("lt-dim"), "non-matching groups do not dim");
 
   hoverChip(chip, "mouseout");
-  assert.equal(rows().filter((tr) => tr.classList.contains("lt-dim")).length, 0);
+  assert.equal(rows().filter((tr) => tr.classList.contains("lt-mark")).length, 0);
 });
 
 test("filter preview uses rowKey when query returns fresh row objects", () => {
@@ -245,20 +246,21 @@ test("filter preview uses rowKey when query returns fresh row objects", () => {
   const chip = [...dom.window.document.querySelectorAll("a[data-filter]")]
     .find((a) => a.dataset.filter === "kind=typeface");
   hoverChip(chip);
-  const dimmed = rows().filter((tr) => tr.classList.contains("lt-dim"));
-  assert.equal(dimmed.length, data.works.length - 7, "only non-matching rows fade");
-  assert.ok(!chip.closest("tr").classList.contains("lt-dim"), "the hovered row survives");
+  const marked = rows().filter((tr) => tr.classList.contains("lt-mark"));
+  assert.equal(marked.length, query(data, { kind: "typeface" }).length, "only matching rows are marked");
+  assert.ok(chip.closest("tr").classList.contains("lt-mark"), "the hovered row is marked");
+  assert.equal(dom.window.document.querySelectorAll(".lt-dim").length, 0);
 });
 
-test("a group cell stays lit while any row in its span survives the preview", () => {
+test("filter preview marks matching rows without dimming grouped cells", () => {
   init();
   const chip = [...dom.window.document.querySelectorAll("a[data-filter]")]
     .find((a) => a.dataset.filter === "kind=book");
   hoverChip(chip);
   const hofmann = [...dom.window.document.querySelectorAll("td.designer[rowspan]")]
     .find((td) => td.textContent.includes("Hofmann"));
-  // Hofmann's head row (a poster) fades, but his book keeps the group label lit
-  assert.ok(hofmann.closest("tr").classList.contains("lt-dim"));
+  assert.equal(rows().filter((tr) => tr.classList.contains("lt-mark")).length, query(data, { kind: "book" }).length);
+  assert.equal(dom.window.document.querySelectorAll(".lt-dim").length, 0);
   assert.ok(!hofmann.classList.contains("lt-dim"));
 });
 
@@ -270,6 +272,7 @@ test("hovering an active filter previews nothing — clicking it would clear, no
     .find((a) => a.dataset.filter === "kind=typeface");
   hoverChip(active);
   assert.equal(dom.window.document.querySelectorAll(".lt-dim").length, 0);
+  assert.equal(dom.window.document.querySelectorAll(".lt-mark").length, 0);
 });
 
 test("hovering a row marks it and reports it via onHover", () => {

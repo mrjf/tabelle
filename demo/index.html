@@ -104,11 +104,11 @@ body.lt-has-dateline table.lt { margin-top: calc(var(--title-block) + var(--date
 .lt tbody a[data-filter] { cursor: pointer; }
 /* underline = a click here filters */
 .lt tbody a[data-filter]:hover { text-decoration: underline; }
-/* filter preview: rows the hovered filter would remove recede; rowspan group
-   cells are dimmed by the engine only when their whole span would go */
+/* preview/highlight: row hover and filter previews use the accent mark; lt-dim
+   remains for companion views that intentionally fade non-matches */
 .lt td { transition: opacity 0.12s ease; }
 .lt tbody tr.lt-dim > td:not([rowspan]), .lt tbody td.lt-dim { opacity: 0.4; }
-.lt tbody tr.lt-mark { box-shadow: inset -2px 0 0 #C8102E; }
+.lt tbody tr.lt-mark > td:last-child { box-shadow: inset -2px 0 0 #C8102E; }
 /* ditto mark: a hairline showing how far a pinned value's range extends */
 /* overflow:clip (NOT hidden — hidden would break sticky) hard-clips label
    painting to the cell, so no engine's compositing can bleed it over the
@@ -786,20 +786,6 @@ function initListTable(config) {
     pointerY = -1;
     updateExternalStatus();
   });
-  // Fade rows failing a predicate. A group cell spanning several rows fades
-  // only when every row in its span fades.
-  function dimRows(keep) {
-    const dim = lastRows.map((row) => !keep(row));
-    renderedRows.forEach((tr, i) => tr.classList.toggle("lt-dim", dim[i]));
-    for (const { td, firstIndex, lastIndex } of groupSpans) {
-      let all = true;
-      for (let i = firstIndex; i <= lastIndex; i += 1) {
-        if (!dim[i]) { all = false; break; }
-      }
-      td.classList.toggle("lt-dim", all);
-    }
-  }
-
   function clearDim() {
     for (const el of table.querySelectorAll(".lt-dim")) el.classList.remove("lt-dim");
   }
@@ -808,9 +794,18 @@ function initListTable(config) {
     for (const el of table.querySelectorAll(".lt-mark")) el.classList.remove("lt-mark");
   }
 
-  function markRow(row) {
+  function clearPreview() {
     clearDim();
     clearMark();
+  }
+
+  function markRows(keep) {
+    clearPreview();
+    renderedRows.forEach((tr, i) => tr.classList.toggle("lt-mark", keep(lastRows[i])));
+  }
+
+  function markRow(row) {
+    clearPreview();
     if (row == null) return;
     const index = rowIndex(row);
     if (index >= 0 && renderedRows[index]) renderedRows[index].classList.add("lt-mark");
@@ -823,17 +818,16 @@ function initListTable(config) {
   }
 
   // Filter preview: while the pointer rests on a value that would filter,
-  // fade the rows that filter would remove.
+  // mark the matching rows with the same accent used for row hover.
   function previewParam(key, value) {
-    clearMark();
     const params = currentParams();
     if (params[key] === value) {
-      clearDim(); // clicking would clear, not narrow — preview the full view
+      clearPreview(); // clicking would clear, not narrow — preview the full view
       return;
     }
     params[key] = value;
     const survivors = new Set(query(data, params).map(rowIdentity));
-    dimRows((row) => survivors.has(rowIdentity(row)));
+    markRows((row) => survivors.has(rowIdentity(row)));
   }
 
   function previewFilter(link) {
@@ -849,16 +843,12 @@ function initListTable(config) {
     const row = tr ? lastRows[renderedRows.indexOf(tr)] ?? null : null;
     if (link) previewFilter(link);
     else if (row) markRow(row);
-    else {
-      clearDim();
-      clearMark();
-    }
+    else clearPreview();
     if (config.onHover) config.onHover(row);
   });
   tbody.addEventListener("mouseout", (event) => {
     if (event.relatedTarget && tbody.contains(event.relatedTarget)) return;
-    clearDim();
-    clearMark();
+    clearPreview();
     if (config.onHover) config.onHover(null);
   });
 
@@ -913,7 +903,7 @@ function initListTable(config) {
     setParam,
     setParams,
     previewParam,
-    clearPreview: clearDim,
+    clearPreview,
     onState(listener) {
       stateListeners.add(listener);
       return () => stateListeners.delete(listener);
